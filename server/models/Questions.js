@@ -3,17 +3,17 @@ const bcrypt = require('bcrypt');
 
 const qSchema = new Schema(
     {
-        qIndex:{
+        qIndex: {
             type: integer,
-            require:  true,
+            require: true,
             unique: true
         },
-        qPrompt:{
+        qPrompt: {
             type: String,
             require: true,
             unique: true
         },
-        qAnswer:{
+        qAnswer: {
             type: String,
             require: true,
             unique: true
@@ -21,8 +21,16 @@ const qSchema = new Schema(
 
     },
     {
-        toJSON:{
+        toJSON: {
             virtuals: true
         }
     }
-)
+);
+
+qSchema.methods.isCorrect = async function (qAnswer){
+    return bcrypt.compare(qAnswer, this.qAnswer);
+};
+
+const Questions = model('Questions', qSchema);
+
+module.exports = Questions;
